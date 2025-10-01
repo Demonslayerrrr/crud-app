@@ -1,10 +1,8 @@
-from sqlalchemy import VARCHAR,INT,DATETIME, Enum as SQLEnum
+from sqlalchemy import VARCHAR, INT, DATE, DATETIME, Enum as SQLEnum, Column
 from enum import Enum
-from datetime import datetime
-from sqlalchemy.orm import DeclarativeBase,Mapped, mapped_column
+from sqlalchemy.orm import declarative_base
 
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 class TaskStatus(Enum):
     PENDING = 'pending'
@@ -18,18 +16,18 @@ class TaskPriority(Enum):
 
 class User(Base):
     __tablename__ = 'users'
-    id:Mapped[int] = mapped_column(INT, primary_key=True,nullable=False,autoincrement=True)
-    username:Mapped[str] = mapped_column(VARCHAR(30), nullable=False)
-    role:Mapped[str] = mapped_column(VARCHAR(30))
-    created_at:Mapped[datetime] = mapped_column(DATETIME)
+    id = Column(INT, primary_key=True,nullable=False,autoincrement=True)
+    username = Column(VARCHAR(30), nullable=False)
+    role= Column(VARCHAR(30))
+    created_at= Column(DATETIME)
     def __repr__(self):
         return f'<User id: {self.id} username: {self.username} role: {self.role} created_at: {self.created_at}>'
 
 class Task(Base):
     __tablename__ = 'tasks'
-    task_id:Mapped[int] = mapped_column(INT, primary_key=True,nullable=False,autoincrement=True)
-    task_name:Mapped[str] = mapped_column(VARCHAR(30), nullable=False)
-    user_id:Mapped[int] = mapped_column(VARCHAR(30), nullable=False)
-    status:Mapped[TaskStatus] = mapped_column(SQLEnum('pending', 'in-progress', 'completed'))
-    due_date:Mapped[datetime] = mapped_column(DATETIME)
-    priority:Mapped[TaskPriority] = mapped_column(SQLEnum('low', 'medium', 'high'))
+    task_id = Column(INT, primary_key=True,nullable=False,autoincrement=True)
+    task_name= Column(VARCHAR(30), nullable=False)
+    user_id= Column(INT, nullable=False)
+    status = Column(SQLEnum(TaskStatus), nullable=False)
+    due_date= Column(DATE)
+    priority = Column(SQLEnum(TaskPriority), nullable=False)
