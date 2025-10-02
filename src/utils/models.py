@@ -1,18 +1,8 @@
 from sqlalchemy import VARCHAR, INT, DATE, DATETIME, Enum as SQLEnum, Column
-from enum import Enum
 from sqlalchemy.orm import declarative_base
+from src.utils.schemas import TaskStatus, TaskPriority
 
 Base = declarative_base()
-
-class TaskStatus(Enum):
-    PENDING = 'pending'
-    IN_PROGRESS = 'in-progress'
-    COMPLETED = 'completed'
-
-class TaskPriority(Enum):
-    LOW = 'low'
-    MEDIUM = 'medium'
-    HIGH = 'high'
 
 class User(Base):
     __tablename__ = 'users'

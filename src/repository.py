@@ -1,8 +1,7 @@
 from sqlalchemy import select, text, update
 from sqlalchemy.orm import scoped_session
 from typing import List, cast, Optional
-from src.models import Task
-
+from src.utils.models import Task
 
 class Repository:
     def __init__(self, url:str, session:scoped_session) -> None:

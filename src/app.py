@@ -1,8 +1,5 @@
-from flask import Flask, current_app, request
-from settings import settings
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from models import Task
+from flask import Flask
+from src.utils.models import Task
 
 app = Flask(__name__)
 @app.get("/create")

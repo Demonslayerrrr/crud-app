@@ -1,7 +1,7 @@
 from pytest import fixture
 from src.repository import Repository
-from unittest.mock import MagicMock
-from src.models import Task, TaskStatus, TaskPriority
+from unittest.mock import Mock
+from src.utils.models import Task, TaskStatus, TaskPriority
 from datetime import date
 from sqlalchemy import Update
 from src.settings import settings
@@ -9,7 +9,7 @@ from sqlalchemy.orm import scoped_session
 
 @fixture
 def mock_session() -> scoped_session:
-    return MagicMock(spec=scoped_session)
+    return Mock(spec=scoped_session)
 @fixture
 def repository(mock_session: scoped_session) -> Repository:
     db_url = settings.database_url
@@ -24,9 +24,9 @@ def test_repository_clear(repository: Repository, mock_session: scoped_session) 
     assert mock_session.execute.call_count == 2 and mock_session.commit.call_count == 1
 
 def test_repository_get_tasks(repository: Repository, mock_session: scoped_session) -> None:
-    fake_result = MagicMock()
-    fake_scalars = MagicMock()
-    fake_scalars.all.return_value = [MagicMock(spec=Task), MagicMock(spec=Task)]
+    fake_result = Mock()
+    fake_scalars = Mock()
+    fake_scalars.all.return_value = [Mock(spec=Task), Mock(spec=Task)]
     fake_result.scalars.return_value = fake_scalars
     mock_session.execute.return_value = fake_result
 
