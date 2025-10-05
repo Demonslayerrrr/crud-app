@@ -21,3 +21,13 @@ class Task(Base):
     status = Column(SQLEnum(TaskStatus), nullable=False)
     due_date= Column(DATE)
     priority = Column(SQLEnum(TaskPriority), nullable=False)
+
+    def to_dict(self):
+        return {
+            "task_id": self.task_id,
+            "task_name": self.task_name,
+            "user_id": self.user_id,
+            "status": self.status.value if self.status else None,
+            "due_date": self.due_date.isoformat() if self.due_date else None,
+            "priority": self.priority.value if self.priority else None,
+        }

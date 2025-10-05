@@ -22,7 +22,6 @@ class TaskUpdate(BaseModel):
     priority: Optional[TaskPriority] = None
 
 class TaskCreate(BaseModel):
-    task_id: int
     task_name: str
     user_id: int
     status: TaskStatus

@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from pydantic import ValidationError
 from pytest import raises, fixture
 from src.controller import Controller

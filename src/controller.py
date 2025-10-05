@@ -28,12 +28,12 @@ class Controller:
         else:
             return task
 
-    def update_task(self, task: dict) -> None:
+    def update_task(self, id:int,task: dict) -> None:
         try:
-            old_task = self.repository.read_by_id(task["task_id"])
+            old_task = self.repository.read_by_id(id)
             data = TaskUpdate(**task)
             task = Task(**data.model_dump())
-            self.repository.update(id=task.task_id,
+            self.repository.update(id=id,
                                    new_task_name=task.task_name if task.task_name else old_task.task_name,
                                    new_status=task.status if task.status else old_task.status,
                                    new_user_id=task.user_id if task.user_id else old_task.user_id,
@@ -45,3 +45,6 @@ class Controller:
         if self.repository.read_by_id(task_id) is None:
             raise NotFound
         self.repository.delete(task_id)
+
+    def clear_tasks(self) -> None:
+        self.repository.clear()
