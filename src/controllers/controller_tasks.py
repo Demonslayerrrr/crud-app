@@ -1,16 +1,16 @@
-from sys import exception
-from src.repository import Repository
+from src.repositories.repository_tasks import TasksRepository as Repository
 from src.utils.models import Task
 from src.utils.schemas import TaskCreate, TaskUpdate
 from typing import List
 from pydantic import ValidationError
 from src.utils.exceptions import NotFound
+from src.controllers.controller_interface import ControllerInterface
 
-class Controller:
-    def __init__(self, repository:Repository) -> None:
-        self.repository = repository
+class TaskController(ControllerInterface):
+    def __init__(self, repository: Repository) -> None:
+        super().__init__(repository)
 
-    def create_task(self, task: dict) -> None:
+    def create(self, task: dict) -> None:
         try:
             data = TaskCreate(**task)
             task = Task(**data.model_dump())
@@ -18,17 +18,17 @@ class Controller:
         except ValidationError as e:
             raise e
 
-    def read_tasks(self) -> List[Task]:
+    def read(self) -> List[Task]:
         return self.repository.read()
 
-    def read_task_by_id(self, task_id: int) -> Task:
+    def read_by_id(self, task_id: int) -> Task:
         task = self.repository.read_by_id(task_id)
         if task is None:
             raise NotFound
         else:
             return task
 
-    def update_task(self, id:int,task: dict) -> None:
+    def update(self, id:int,task: dict) -> None:
         try:
             old_task = self.repository.read_by_id(id)
             data = TaskUpdate(**task)
@@ -41,10 +41,10 @@ class Controller:
                                    new_priority=task.priority if task.priority else old_task.priority)
         except ValidationError as e:
             raise e
-    def delete_task(self, task_id:int) -> None:
+    def delete(self, task_id:int) -> None:
         if self.repository.read_by_id(task_id) is None:
             raise NotFound
         self.repository.delete(task_id)
 
-    def clear_tasks(self) -> None:
+    def clear(self) -> None:
         self.repository.clear()

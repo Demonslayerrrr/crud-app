@@ -2,11 +2,11 @@ from sqlalchemy import select, text, update
 from sqlalchemy.orm import scoped_session
 from typing import List, cast, Optional
 from src.utils.models import Task
+from src.repositories.repository_interface import RepositoryInterface
 
-class Repository:
+class TasksRepository(RepositoryInterface):
     def __init__(self, url:str, session:scoped_session) -> None:
-        self.db_url = url
-        self._session = session
+        super().__init__(url, session)
 
     def create(self, task: Task) -> None:
         self._session.add(task)
@@ -19,16 +19,16 @@ class Repository:
     def read_by_id(self, id: int) -> Optional[Task]:
         return self._session.get(Task, id)
 
-    def update(self, id, new_task_name, new_user_id, new_status, new_due_date, new_priority) -> None:
+    def update(self, id, **kwargs) -> None:
         stmt = (
             update(Task)
             .where(Task.task_id == id)
             .values(
-                task_name=new_task_name,
-                user_id=new_user_id,
-                status=new_status,
-                due_date=new_due_date,
-                priority=new_priority,
+                task_name=kwargs["new_task_name"],
+                user_id=kwargs["new_user_id"],
+                status=kwargs["new_status"],
+                due_date=kwargs["new_due_date"],
+                priority=kwargs["new_priority"],
             )
         )
         self._session.execute(stmt)

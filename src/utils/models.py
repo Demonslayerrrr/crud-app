@@ -10,8 +10,14 @@ class User(Base):
     username = Column(VARCHAR(30), nullable=False)
     role= Column(VARCHAR(30))
     created_at= Column(DATETIME)
-    def __repr__(self):
-        return f'<User id: {self.id} username: {self.username} role: {self.role} created_at: {self.created_at}>'
+
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'username': self.username,
+            'role': self.role,
+            'created_at': self.created_at,
+        }
 
 class Task(Base):
     __tablename__ = 'tasks'
@@ -22,7 +28,7 @@ class Task(Base):
     due_date= Column(DATE)
     priority = Column(SQLEnum(TaskPriority), nullable=False)
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "task_id": self.task_id,
             "task_name": self.task_name,

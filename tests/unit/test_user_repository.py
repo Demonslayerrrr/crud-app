@@ -1,7 +1,7 @@
 from pytest import fixture
-from src.repository import Repository
+from src.repositories.repository_users import UserRepository as Repository
 from unittest.mock import Mock
-from src.utils.models import Task, TaskStatus, TaskPriority
+from src.utils.models import User
 from datetime import date
 from sqlalchemy import Update
 from src.settings import settings
@@ -23,10 +23,10 @@ def test_repository_clear(repository: Repository, mock_session: scoped_session) 
     repository.clear()
     assert mock_session.execute.call_count == 2 and mock_session.commit.call_count == 1
 
-def test_repository_get_tasks(repository: Repository, mock_session: scoped_session) -> None:
+def test_repository_get_users(repository: Repository, mock_session: scoped_session) -> None:
     fake_result = Mock()
     fake_scalars = Mock()
-    fake_scalars.all.return_value = [Mock(spec=Task), Mock(spec=Task)]
+    fake_scalars.all.return_value = [Mock(spec=User), Mock(spec=User)]
     fake_result.scalars.return_value = fake_scalars
     mock_session.execute.return_value = fake_result
 
@@ -34,12 +34,11 @@ def test_repository_get_tasks(repository: Repository, mock_session: scoped_sessi
 
     mock_session.execute.assert_called_once()
     assert len(result) == 2
-    assert all(isinstance(i, Task) for i in result)
+    assert all(isinstance(i, User) for i in result)
 
-
-def test_repository_get_task_by_id(repository: Repository, mock_session: scoped_session) -> None:
+def test_repository_get_user_by_id(repository: Repository, mock_session: scoped_session) -> None:
     repository.read_by_id(1)
-    mock_session.get.assert_called_once_with(Task, 1)
+    mock_session.get.assert_called_once_with(User, 1)
 
 
 def test_repository_delete(repository: Repository, mock_session: scoped_session) -> None:
@@ -48,7 +47,7 @@ def test_repository_delete(repository: Repository, mock_session: scoped_session)
     mock_session.commit.assert_called_once
 
 def test_repository_update(repository: Repository, mock_session: scoped_session) -> None:
-    repository.update(1, new_task_name="c", new_user_id=0, new_status=TaskStatus.PENDING, new_due_date=date.today(), new_priority=TaskPriority.LOW)
+    repository.update(1, new_username="a", new_created_at="08-10-2025",new_role="test")
     mock_session.execute.assert_called_once
     args, _= mock_session.execute.call_args
     assert isinstance(args[0], Update)

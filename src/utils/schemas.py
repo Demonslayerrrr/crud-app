@@ -1,5 +1,5 @@
 from typing import Optional
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
 from pydantic import BaseModel
 
@@ -27,3 +27,13 @@ class TaskCreate(BaseModel):
     status: TaskStatus
     due_date: date
     priority: TaskPriority
+
+class UserCreate(BaseModel):
+    username: str
+    role: str
+    created_at: datetime
+
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    role: Optional[str] = None
+    created_at: Optional[datetime] = None
